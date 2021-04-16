@@ -1,0 +1,2 @@
+# CERD
+School Management System

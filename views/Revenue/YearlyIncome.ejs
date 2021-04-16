@@ -1,0 +1,150 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="container">
+    <div class="row">
+        <div class="d-flex justify-content-md-center align-items-center">
+            <select id="select" style="border: none; outline:0px; font-size: 3rem; font-weight: bold; -webkit-appearance: button;" class="form-select-lg my-3" aria-label=".form-select-lg example" onchange="performChange()">
+                <% for (let i = 1900; i < 3000; i ++) { %>
+                    <option value=<%= i %> <%= year === i? "selected" : "" %>><%= i %></option>
+                <% } %>  
+            </select>
+        </div>
+    </div>
+    <div class="row mx-5 my-3 table-responsive-sm">
+        <table class="table container table-hover text-center">
+        <thead>
+            <tr>
+            <th scope="col">Particulars</th>
+            <th scope="col">Pre. KG</th>
+            <th scope="col">LKG</th>
+            <th scope="col">UKG</th>
+            <th scope="col">I</th>
+            <th scope="col">II</th>
+            <th scope="col">III</th>
+            <th scope="col">IV</th>
+            <th scope="col">V</th>
+            <th scope="col"> Academic Year </th>
+            <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody id="list">
+                <tr id="rowValue">
+                    <form action="/IncomeSchema" method="POST" class="needs-validation">
+                    <td><input type="text" class="form-control" name="particulars" required></td>
+                    <td><input type="text" class="form-control" name="PreKG" required></td>
+                    <td><input type="text" class="form-control" name="LKG" required></td>
+                    <td><input type="text" class="form-control" name="UKG" required></td>
+                    <td><input type="text" class="form-control" name="I" required></td>
+                    <td><input type="text" class="form-control" name="II" required></td>
+                    <td><input type="text" class="form-control" name="III" required></td>
+                    <td><input type="text" class="form-control" name="IV" required></td>
+                    <td><input type="text" class="form-control" name="V" required></td>
+                    <td><input type="number" min="1900" max="2999" style="width: 80px;" class="form-control" id="currentVal" name="academicYear" required></td>
+                    <td><button type="submit" class="btn btn-dark" id="Remove" required>Add</button></td>
+                    </form>
+                </tr>
+        </tbody>
+        </table>
+    </div>
+</div>
+<div class="d-flex flex-row-reverse mx-3">
+    <h6>* Amount added under tag <strong style="color: darkred;">"Admin"</strong> (In Particulars section) will not be calculated for old students, will only be added to new students</h6>
+</div>
+<div class="d-flex flex-row-reverse mx-3">
+    <h6>* Amount added under tag <strong style="color: darkred;">"RTE"</strong> (In Particulars section) will be assigned as total yearly amount for RTE students</h6>
+</div>
+
+<%- include('../partials/validateForm') %>
+
+<script>
+    const URL = "/IncomeSchema/";
+    const select = document.getElementById("select");
+    let inputYear = document.getElementById("currentVal");
+    function removeAllChildNodes(parent) {
+        while (parent.firstChild.id != "rowValue") {
+            parent.removeChild(parent.firstChild);
+        };
+    };
+    function noResultsFound (wrapper) {
+        let item_element = document.createElement("tr");
+        let item_head = `<th scope="row"></th>
+            <td></td>
+            <td></td>
+            <td>No</td>
+            <td>Results</td>
+            <td>Found</td>
+            <td>In</td>
+            <td>Database</td>`;
+        item_element.innerHTML = item_head;
+        wrapper.insertBefore(item_element, document.getElementById("rowValue"));
+    };
+    async function performChange () {
+        removeAllChildNodes(document.getElementById("list"));
+        let total_PKG = total_LKG = total_UKG = total_I = total_II = total_III = total_IV = total_V = new Number(0);
+        inputYear.value = select.value;
+        const response = await fetch(URL + select.value);
+        const data = await response.json();
+        const result = await data.data;
+
+        if(result.length > 0) {
+            for (let q = 0; q < result.length; q++){
+                if(result[q].particulars != "RTE") {
+                    total_PKG = total_PKG + result[q].PreKG
+                    total_LKG = total_LKG + result[q].LKG
+                    total_UKG = total_UKG + result[q].UKG
+                    total_I = total_I + result[q].I
+                    total_II = total_II + result[q].II
+                    total_III = total_III + result[q].III
+                    total_IV = total_IV + result[q].IV
+                    total_V = total_V + result[q].V
+                };
+                let item_head = document.createElement("tr");
+                let item_inside = `<td><input type="text" class="form-control text-center" value="${result[q].particulars}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${result[q].PreKG}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${result[q].LKG}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${result[q].UKG}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${result[q].I}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${result[q].II}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${result[q].III}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${result[q].IV}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${result[q].V}" disabled readonly></td>
+                            <td><form action="/IncomeSchema/removeIncome/${result[q]._id}?_method=DELETE" method="POST">
+                                <button type="submit" class="btn btn-white">x</button></a>
+                            </form></td>`
+                item_head.innerHTML = item_inside;
+                document.getElementById("list").insertBefore(item_head, document.getElementById("rowValue"));
+            };
+            for (let eachDataSet in result){
+                if (result[eachDataSet].particulars == "Admin") {
+                    let item_totalOld = document.createElement("tr");
+                    let item_old = `<td><input type="text" class="form-control text-center" value="Total Old" disabled readonly></td>
+                                    <td><input type="number" class="form-control text-center" value=0 disabled readonly></td>
+                                    <td><input type="number" class="form-control text-center" value="${total_LKG - result[eachDataSet].LKG}" disabled readonly></td>
+                                    <td><input type="number" class="form-control text-center" value="${total_UKG - result[eachDataSet].UKG}" disabled readonly></td>
+                                    <td><input type="number" class="form-control text-center" value="${total_I - result[eachDataSet].I}" disabled readonly></td>
+                                    <td><input type="number" class="form-control text-center" value="${total_II - result[eachDataSet].II}" disabled readonly></td>
+                                    <td><input type="number" class="form-control text-center" value="${total_III - result[eachDataSet].III}" disabled readonly></td>
+                                    <td><input type="number" class="form-control text-center" value="${total_IV - result[eachDataSet].IV}" disabled readonly></td>
+                                    <td><input type="number" class="form-control text-center" value="${total_V - result[eachDataSet].V}" disabled readonly></td>`
+                    item_totalOld.innerHTML = item_old;
+                    document.getElementById("list").insertBefore(item_totalOld, document.getElementById("rowValue"));
+                };
+            }
+            let item_end = document.createElement("tr");
+            let item_last = `<td><input type="text" class="form-control text-center" value="Total New" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${total_PKG}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${total_LKG}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${total_UKG}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${total_I}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${total_II}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${total_III}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${total_IV}" disabled readonly></td>
+                            <td><input type="number" class="form-control text-center" value="${total_V}" disabled readonly></td>`
+            item_end.innerHTML = item_last;
+            document.getElementById("list").insertBefore(item_end, document.getElementById("rowValue"));
+        } else {
+            noResultsFound(document.getElementById("list"));
+        };
+    };
+    document.onload = performChange();
+</script>

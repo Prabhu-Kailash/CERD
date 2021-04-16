@@ -1,0 +1,77 @@
+<% layout("layouts/boilerplate") %>
+<div class="container">
+    <div class="row mx-5 my-3 table-responsive-sm">
+        <form action="/Report/<%= student._id %>" method="POST" class="needs-validation">
+        <div class="row mx-auto justify-content-center">
+            <div class="col-2 p-0">
+                <input type="text" class="form-control" id="heading" name="heading" readOnly=true value="<%=report.heading == undefined ? "" : report.heading%>" required>
+            </div>
+            <div class="col-1 text-center p-0">
+                <button type="button" class="btn btn-white" id="toggle"><img src="https://img.icons8.com/cotton/2x/edit.png" alt="" srcset="" width="20vw"></button>
+            </div>
+        </div>
+        
+        <table class="table container table-hover text-center">
+        <thead>
+            <tr>
+            <th scope="col">Subject</th>
+            <th scope="col">Score</th>
+            <th scope="col">Total</th>
+            <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody id="list">
+                <tr id="rowValue">
+                    <td><input type="text" class="form-control" name="subjects[subject]" required></td>
+                    <td><input type="text" class="form-control" name="subjects[score]" required></td>
+                    <td><input type="text" class="form-control" name="subjects[total]" required></td>
+                    <td><button type="submit" class="btn btn-dark" id="Add" required>Add</button></td>
+                    </form>
+                </tr>
+                <% if(report) { %>
+                    <% for(let k = 0; k < report.subjects.length; k++){ %>  
+                    <tr>
+                        <td><input type="text" class="form-control text-center" value="<%= report.subjects[k].subject %>"  readonly></td>
+                        <td><input type="text" class="form-control text-center" value="<%= report.subjects[k].score %>" readonly></td>
+                        <td><input type="text" class="form-control text-center" value="<%= report.subjects[k].total %>" readonly></td>
+                        <form action="/Report/<%= student._id %>/<%= report.subjects[k]._id%>?_method=DELETE" method="post">
+                            <td><button type="submit" class="btn btn-dark" required>x</button></td>
+                        </form>
+                    </tr>
+                    <% } %> 
+                <% } %>
+                <tr>
+                    <td>Total</td>
+                    <td id="score"><%= report.subjects.map(score => score.score).reduce(function(a,b){return a+b}, 0) %></td>
+                    <td id="total"><%= report.subjects.map(score => score.total).reduce(function(a,b){return a+b}, 0) %></td>
+                </tr>
+        </tbody>
+        </table>
+        <div class="row justify-content-center">
+            <div class="col-2">
+                <form action="/Report/<%= student._id %>?_method=DELETE" method="POST">
+                    <button type="submit" class="btn btn-danger">Clear</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/validateForm') %>
+
+<script>
+    const toggle = document.getElementById('toggle');
+    const heading = document.getElementById('heading');
+    const score = document.getElementById('score');
+    const total = document.getElementById('total');
+
+    toggle.addEventListener('click', () => {
+        if(heading.readOnly){
+            heading.readOnly = false;
+        } else {
+            heading.readOnly = true;
+        };
+    });
+
+
+</script>

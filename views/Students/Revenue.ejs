@@ -1,0 +1,67 @@
+<% layout("layouts/boilerplate") %>
+<div class="container">
+  <h3 class="text-center my-5">Student Money Transaction Details</h3>
+    <% if(studentRev) { %> 
+        <div class="row mx-5 my-3 table-responsive-sm">
+          <table class="table container table-hover text-center">
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Academic Yr</th>
+                <th scope="col">Description</th>
+                <th scope="col">Amount Paid</th>
+              </tr>
+            </thead>
+            <tbody id="list">
+                <% for (let l = 0; l < studentRev.revenue.amountPaid.length; l++) { %>
+                  <% if (studentRev.revenue.amountPaid[l].academicYr == workingYear) {%> 
+                    <tr>
+                        <td><%= studentRev.revenue.amountPaid[l].present %></td>
+                        <td><%= studentRev.revenue.amountPaid[l].academicYr %></td>
+                        <td><%= studentRev.revenue.amountPaid[l].description %></td>
+                        <td><%= studentRev.revenue.amountPaid[l].paid %></td>
+                        <td><form action="/Revenue/<%= studentRev._id %>/<%= studentRev.revenue._id %>/<%= studentRev.revenue.amountPaid[l]._id %>?_method=DELETE" method="POST">
+                            <button type="submit" class="btn btn-white">x</button></a>
+                        </form></td>
+                    </tr>
+                    <% } %>
+                <% } %>
+                <% if(totalAmountPaid > 0){%> 
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Total amount paid so far : <%= totalAmountPaid %></td>
+                  </tr>
+                <% } %>
+                <% if(studentRev.revenue) {%>
+                  <tr>
+                    <td><%= (studentRev.classes.DOJ <= `${workingYear + 1}-06-01` && studentRev.classes.DOJ >= `${workingYear}-06-01`) ? `New Student` : `Old Student` %></td>
+                    <td></td>
+                    <td></td>
+                    <td>Total amount to be paid for <%= workingYear %>  Academic Year : <%= (studentRev.classes.DOJ <= `${workingYear + 1}-06-01` && studentRev.classes.DOJ >= `${workingYear}-06-01`) ? studentRev.revenue.newStudent : studentRev.revenue.oldStudent %></td>
+                  </tr>
+                    <% } %>
+                <tr>
+                  <div class="row">
+                    <p class="text-end">Showing details for current academic year <%= workingYear %> </p>
+                </div>
+                    <form action="/Revenue/<%= studentRev._id %>" method="POST" class="needs-validation">
+                        <td><input type="date" class="form-control" name="present" required></td>
+                        <td><select id="select" style="border: none;" class="form-select" name="academicYr">
+                                  <% for (let i = 1900; i < 3000; i ++) { %>
+                                      <option value=<%= i %> <%= workingYear === i? "selected" : "" %>><%= i %></option>
+                                  <% } %>  
+                              </select></td>
+                        <td><input type="text" class="form-control" name="description" required></td>
+                        <td><input type="text" class="form-control" name="paid" required></td>
+                        <td><button type="submit" class="btn btn-dark" id="Remove" required>Add</button></td>
+                    </form>
+                </tr>
+            </tbody>
+          </table>
+        </div>
+        <% } %> 
+</div>
+
+<%- include('../partials/validateForm') %>

@@ -1,0 +1,153 @@
+<% layout('layouts/boilerplate') %>
+<div class="container mt-5">
+    <div class="row">
+            <h1 class="text-center">New Student</h1>
+            <form action="/students/<%=student._id%>?_method=PUT" method="POST" class="needs-validation" novalidate>
+
+                <!-- Student Details Section -->
+                
+                <div class="row mb-2">
+                    <div class="col">
+                        <div>
+                            <label class="form-label" for="name">Student Name:</label>
+                            <input class="form-control" type="text" id="name" name="student[name]" value="<%= student.name %>" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div>
+                            <label class="form-label" for="aadhar">Aadhar Number:</label>
+                            <input class="form-control" type="number" id="aadhar" name="student[aadhar]" value="<%= student.aadhar %>" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="DOB">Date of Birth:</label>
+                    <input class="form-control" type="date" id="DOB" name="student[DOB]" data-provide="datepicker" value="<%= student.DOB %>" required>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col">
+                      <input type="text" class="form-control" name="student[religion]" placeholder="Religion" aria-label="Religion" value="<%= student.religion %>">
+                    </div>
+                    <div class="col">
+                      <input type="text" class="form-control" name="student[caste]" placeholder="Caste" aria-label="Caste" value="<%= student.caste %>">
+                    </div>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" ng-model="gender" name="student[gender]" id="Male" value="Male" <%= student.gender ==='Male' ? "checked" : "" %>>
+                    <label class="form-check-label" for="Male">
+                    Male
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" ng-model="gender" name="student[gender]" id="Female" value="Female" <%= student.gender ==='Female' ? "checked" : "" %>>
+                    <label class="form-check-label" for="Female">
+                    Female
+                    </label>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-1">
+                        <hr style="border: 7px none grey; border-top-style: dotted; background-color: white;">
+                    </div>
+                </div>
+
+                <!-- Parent's Details Section -->
+
+                <h1 class="text-center">Parent's Details</h1>
+                
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label" for="FName">Father's Name:</label>
+                        <input type="text" name="parents[fatherName]" id="FName" class="form-control" placeholder="Father's Name" aria-label="Father's Name" value="<%= student.parents.fatherName %>">
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="MName">Mother's Name:</label>
+                        <input type="text" name="parents[motherName]" id="MName" class="form-control" placeholder="Mother's Name" aria-label="Mother's Name" value="<%= student.parents.motherName %>">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <input type="text" name="parents[doorNumber]" id="DoorNo" class="form-control" placeholder="Door Number" aria-label="Door Number" value="<%= student.parents.doorNumber %>" required>
+                    </div>
+                    <div class="col">
+                        <input type="text" name="parents[streetName]" id="streetName" class="form-control" placeholder="Street Name" aria-label="Street Name" value="<%= student.parents.streetName %>" required>
+                    </div>
+                    <div class="col">
+                        <input type="text" name="parents[cityName]" id="cityName" class="form-control" placeholder="City" aria-label="City" value="<%= student.parents.cityName %>" required>
+                    </div>
+                    <div class="col">
+                        <input type="number" name="parents[pincode]" id="pincode" class="form-control" placeholder="Pincode" aria-label="Pincode" value="<%= student.parents.pincode %>" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label" for="mainContact">Main Contact Number:</label>
+                        <input type="number" name="parents[mainContact]" id="mainContact" class="form-control" value="<%= student.parents.mainContact %>" required>
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="alternateContact">Alternate Contact Number:</label>
+                        <input type="number" name="parents[alternateContact]" id="alternateContact" class="form-control" value="<%= student.parents.alternateContact %>">
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-1">
+                        <hr style="border: 7px none grey; border-top-style: dotted; background-color: white;">
+                    </div>
+                </div>
+
+                <!-- Admission Details -->
+
+                <h1 class="text-center">Admission Details</h1>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label" for="admissionNumber">Admission Number:</label>
+                        <input type="number" name="class[admissionNumber]" id="admissionNumber" class="form-control" value="<%= student.classes.admissionNumber %>" required>
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="DOJ">Date of Joining:</label>
+                        <input class="form-control" type="date" id="DOJ" name="class[DOJ]" data-provide="datepicker" value="<%= student.classes.DOJ %>" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label" for="class">Class enrolled:</label>
+                        <select class="form-select" name="class[class]" aria-label="class" value="<%= student.classes.DOJ %>">
+                            <% for (std of schoolStandard.class) {%>
+                                <option value="<%= std %>" <%= student.classes.class === std? "selected" : ""%>><%= std %></option>
+                            <% } %>  
+                          </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="section">Section:</label>
+                        <select class="form-select" name="class[section]" aria-label="section">
+                            <% for (section of schoolStandard.sec) {%>
+                                <option value="<%= section %>" <%= student.classes.section === section? "selected" : ""%>><%= section %></option>
+                            <% } %>
+                          </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="section">RTE:</label>
+                        <select class="form-select" name="class[RTE]" aria-label="section">
+                            <% for (RTE of schoolStandard.RTE) {%>
+                                <option value="<%= RTE %>" <%= student.classes.RTE === RTE? "selected" : ""%>><%= RTE %></option>
+                            <% } %>
+                          </select>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center my-3 text-center">
+                    <div class="col">
+                        <button class="btn btn-success mb-2">Update</button>
+                    </div>
+                </div>
+
+            </form>
+    </div>
+</div>
+
+<%- include('../partials/validateForm') %> 

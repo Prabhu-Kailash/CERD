@@ -1,0 +1,102 @@
+<% layout("layouts/boilerplate") %>
+<div class="container">
+    <div class="row my-5">
+        <h2 class="text-center">Transferred Students List</h2>
+    </div>
+
+    <!-- Search/Filter/Pagination -->
+
+    <div class="row">
+        <div class="col-sm">
+        <div class="input-group">
+            <div class="input-group-prepend">
+            <span class="input-group-text">Search :</span>
+            </div>
+            <input type="text" class="form-control" id="SearchBox">
+        </div>
+        </div>
+        <div class="col-sm">
+        <div class="input-group">
+            <div class="input-group-prepend">
+            <span class="input-group-text">Filter By Class :</span>
+            </div>
+            <select class="form-select" aria-label="Default select example" id="filterStd">
+            <option value="All" selected>All</option>
+            <option value="LKG">L.K.G</option>
+            <option value="UKG">U.K.G</option>
+            <option value="I">I</option>
+            <option value="II">II</option>
+            <option value="III">III</option>
+            <option value="IV">IV</option>
+            <option value="V">V</option>
+            </select>
+        </div>
+        </div>
+        <div class="col-sm">
+        <div class="input-group">
+            <div class="input-group-prepend">
+            <span class="input-group-text">Filter By Section :</span>
+            </div>
+            <select class="form-select" aria-label="Default select example" id="filterSec">
+            <option value="All" selected>All</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            </select>
+        </div>
+        </div>
+        <div class="col-sm">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Filter By RTE Status :</span>
+              </div>
+              <select class="form-select" aria-label="Default select example" id="filterByRTE">
+                <option value="All" selected>All</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+        </div>
+        <div class="col-sm">
+        <nav aria-label="Table navigation">
+            <ul class="pagination justify-content-end" id="pagination" class="bg-dark">
+            </ul>
+        </nav>
+        </div>
+    </div>
+    
+    <!-- Display content lists -->
+    <% if(students.length > 0) { %> 
+        <div class="row mx-5 my-3 table-responsive-sm">
+        <table class="table container table-hover text-center">
+            <thead>
+            <tr>
+                <th scope="col">Admission Number</th>
+                <th scope="col">Student Name</th>
+                <th scope="col">Class</th>
+                <th scope="col">Section</th>
+                <th scope="col">DOL</th>
+                <th scope="col">RTE</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody id="list">
+            </tbody>
+        </table>
+        </div>
+        <% }  else { %>
+            <div class="row mx-5 my-3 table-responsive-sm">
+                <table class="table container table-hover text-center">
+                    <thead>
+                    <tr>
+                        <th scope="col">No Students transferred so far!</th>
+                    </tr>
+                    </thead>
+                    <tbody id="list">
+                    </tbody>
+                </table>
+                </div>
+        <% } %>  
+</div>
+
+<script src="./JS/TransferTableContents.js"></script>

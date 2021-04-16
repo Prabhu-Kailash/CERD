@@ -1,0 +1,218 @@
+<% layout("layouts/boilerplate") %>
+<div class="container">
+
+  <div class="row">
+    <div class="d-flex justify-content-center align-items-center">
+        <select id="select" style="border: none; outline:0px; font-size: 3rem; font-weight: bold; -webkit-appearance: button;" class="form-select-lg my-3" aria-label=".form-select-lg example" onchange="performChange()">
+            <% for (let i = 1900; i < 3000; i ++) { %>
+                <option value=<%= i %> <%= numberData.year === i? "selected" : "" %>><%= i %></option>
+            <% } %>  
+        </select>
+    </div>
+  </div>
+
+    <div class="row mx-auto my-3">
+
+      <!-- Total Numbers of Students -->
+
+        <div class="col-sm d-flex mb-3">
+            <div class="card">
+                <a class="mx-auto" href="/dashboard/studentsList"><img class="card-img-top" style="width: 6rem; height: 5rem;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6zH7KEUQHpTTUHSIu-bNh0HvKG53bttpb-g&usqp=CAU" alt="Card image cap"></a>
+                <div class="card-body">
+                  <p class="card-text">Total Students : <a href="/dashboard/studentsList" style="text-decoration: none;"><strong><%= students.length %></strong></a></p>
+                </div>
+            </div>
+            <div class="d-flex">
+                <div class="card">
+                  <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="https://i.pinimg.com/originals/60/7b/a1/607ba1795c55444e38bed385a9272932.png" alt="Card image cap">
+                    <div class="card-body">
+                        <p class="my-0">Number of Boys : <%= numberData.boys  %></p>
+                    </div>
+                </div>
+                <div class="card">
+                  <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="https://i.pinimg.com/originals/a2/26/91/a226914001492533a363c320ba6dba4c.png" alt="Card image cap">
+                    <div class="card-body">
+                        <p class="my-0">Number of Girls : <%= numberData.girls  %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Number of Staffs -->
+
+        <div class="col-sm d-flex mb-3">
+          <div class="card">
+              <img class="card-img-top mx-auto" style="width: 6rem; height: 5rem;" src="https://img.freepik.com/free-vector/teacher-standing-near-blackboard-holding-stick-isolated-flat-vector-illustration-cartoon-woman-character-near-chalkboard-pointing-alphabet_74855-8600.jpg?size=626&ext=jpg" alt="Card image cap">
+              <div class="card-body">
+                <p class="card-text">Faculties : <strong>8</strong></p>
+              </div>
+          </div>
+          <div class="d-flex">
+              <div class="card">
+                <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="https://cdn1.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-sporty-brunette-2-512.png" alt="Card image cap">
+                  <div class="card-body">
+                      <p class="my-0">Teaching Staffs : 6</p>
+                  </div>
+              </div>
+              <div class="card">
+                <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="https://cdn1.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-assistant-brunette-2-512.png" alt="Card image cap">
+                  <div class="card-body">
+                      <p class="my-0">Non-Teaching Staffs : 2</p>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+        <!-- Active/Transferred Students -->
+
+        <div class="col-sm d-flex mb-3">
+          <div class="card">
+            <img class="card-img-top mx-auto" style="width: 6rem; height: 5rem;" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/7691a138650505.598fa119bce1e.jpg" alt="Card image cap">
+            <div class="card-body">
+              <p class="card-text"><%= numberData.year %>: <%= numberData.admission  %></p>
+              <p class="card-text"><%= numberData.year - 1 %>: <%= numberData.lastyr  %></p>
+            </div>
+        </div>
+          <div class="d-flex">
+              <div class="card">
+                <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="https://i.pinimg.com/originals/cc/35/13/cc35139a1e84ce860f2c627e1d6c232c.png" alt="Card image cap">
+                  <div class="card-body">
+                      <p class="my-0">Active: <%= numberData.active  %></p>
+                  </div>
+              </div>
+              <div class="card">
+                <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQP1S9B0WRW23C_1kPY05Lg5PTVdQHeqMcPQg&usqp=CAU" alt="Card image cap">
+                  <div class="card-body">
+                      <p class="my-0">Transferred: <a href="/transfer" style="text-decoration: none; color: darkred;"><strong><%= numberData.transfer  %></strong></a></p>
+                  </div>
+              </div>
+          </div>
+      </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-1">
+            <hr style="border: 7px none grey; border-top-style: dotted; background-color: white;">
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <h2 class="text-center">Active Students List</h2>
+      </div>
+
+      <!-- Search/Filter/Pagination -->
+
+      <div class="row">
+        <div class="col-sm">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Search :</span>
+            </div>
+            <input type="text" class="form-control" id="SearchBox">
+          </div>
+        </div>
+        <div class="col-sm">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Filter By Class :</span>
+            </div>
+            <select class="form-select" aria-label="Default select example" id="filterStd">
+              <option value="All" selected>All</option>
+              <option value="PreKG">PreKG</option>
+              <option value="LKG">L.K.G</option>
+              <option value="UKG">U.K.G</option>
+              <option value="I">I</option>
+              <option value="II">II</option>
+              <option value="III">III</option>
+              <option value="IV">IV</option>
+              <option value="V">V</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Filter By Section :</span>
+            </div>
+            <select class="form-select" aria-label="Default select example" id="filterSec">
+              <option value="All" selected>All</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Filter By RTE Status :</span>
+            </div>
+            <select class="form-select" aria-label="Default select example" id="filterByRTE">
+              <option value="All" selected>All</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm">
+          <nav aria-label="Table navigation">
+            <ul class="pagination justify-content-end" id="pagination" class="bg-dark">
+            </ul>
+          </nav>
+        </div>
+      </div>
+      
+      <!-- Display content lists -->
+      <% if(students.length > 0) { %> 
+        <div class="row mx-5 my-3 table-responsive-sm">
+          <table class="table container table-hover text-center">
+            <thead>
+              <tr>
+                <th scope="col">Admission Number</th>
+                <th scope="col">Student Name</th>
+                <th scope="col">Class</th>
+                <th scope="col">Section</th>
+                <th scope="col">DOJ</th>
+                <th scope="col">RTE</th>
+                <th scope="col">Action</th>
+                <th scope="col">Transfer</th>
+              </tr>
+            </thead>
+            <tbody id="list">
+            </tbody>
+          </table>
+        </div>
+        <% } %> 
+      <div class="d-flex flex-row-reverse mx-3">
+          <h6>* Click on each <strong style="color: darkred;">"Admission Number"</strong> to view specific student's revenue details.</h6>
+      </div>
+      <div class="d-flex flex-row-reverse mx-3">
+          <h6>* Click on each <strong style="color: darkred;">"Student Name"</strong> to view specific student's previous/most recent report card.</h6>
+      </div>
+</div>
+
+<script src="./JS/ActiveTableContents.js"></script>
+
+<script>
+  async function performChange() {
+    alert("Make sure to update relevant Yearly Schema/Revenue for the Academic Year Change!")
+    post("/changeYear", {year: document.getElementById("select").value})
+  };
+
+  function post(path, params, method="post") {
+    const form = document.createElement("form");
+    form.method = method;
+    form.action = path;
+    for (const key in params) {
+      if (params.hasOwnProperty(key)) {
+        const hiddenField = document.createElement("input");
+        hiddenField.type = "hidden";
+        hiddenField.name = key;
+        hiddenField.value = params[key];
+        form.appendChild(hiddenField);
+      };
+    };
+    document.body.appendChild(form);
+    form.submit();
+  };
+</script>

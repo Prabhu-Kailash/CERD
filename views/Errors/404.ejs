@@ -1,0 +1,18 @@
+<% layout("layouts/errors") %>
+
+<div class="container vh-100">
+    <div class="row align-items-center vh-100">
+        <div class="col-6 mx-auto">
+            <div class="jumbotron text-center">
+                <h4>Oops! You are lost.</h4>
+                <h4><%= err.statusCode %> </h4>
+                <p class="mb-0"><%= err.message %> </p>
+                <p class=""><%= err.stack %> </p>
+                <img src="https://images.all-free-download.com/images/graphicthumb/error_404_page_not_found_6845510.jpg" alt="">
+                <div>
+                    <a href="/"><button class="btn btn-dark">Get me Out!</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

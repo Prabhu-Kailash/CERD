@@ -1,0 +1,211 @@
+<% layout("layouts/boilerplate") %>
+<div class="container">
+    <div class="row my-5">
+        <div class="col-sm">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Filter By Class :</span>
+            </div>
+            <select class="form-select" aria-label="Default select example" id="filterStd">
+              <option value="All" selected>All</option>
+              <option value="PreKG">PreKG</option>
+              <option value="LKG">L.K.G</option>
+              <option value="UKG">U.K.G</option>
+              <option value="I">I</option>
+              <option value="II">II</option>
+              <option value="III">III</option>
+              <option value="IV">IV</option>
+              <option value="V">V</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-sm">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Filter By Section :</span>
+            </div>
+            <select class="form-select" aria-label="Default select example" id="filterSec">
+              <option value="All" selected>All</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+            </select>
+          </div>
+        </div>
+    </div>
+
+    <div class="row gx-5">
+        <div class="row justify-content-evenly align-items-center">
+            <div class="col-4">
+                <h4 class="text-center">Active Students</h4>
+            </div>
+            <div class="col-4">
+                <h4 class="text-center">Promote Students</h4>
+            </div>
+        </div>
+        <div class="row justify-content-center align-items-center">
+            <div class="col-4 overflow-auto p-0" id="source" style="border: 2px solid grey; height: 80vh;" ondrop="drop(event, this)" ondragover="allowDrop(event)"></div>
+            <div class="col-1 text-center">
+                <button class="btn btn-white" id="backforward" style="background-color: white; border: 1px solid grey; border-radius: 4px;" onclick="moveBackward()"><<</h4>
+                <button class="btn btn-white" id="backforward" style="background-color: white; border: 1px solid grey; border-radius: 4px;" onclick="moveForward()">>></h4>
+            </div>
+            <div id="destination" class="col-4 overflow-auto p-0" ondrop="drop(event, this)" ondragover="allowDrop(event)" style="border: 2px solid grey; height: 80vh;"></div>
+        </div>
+    </div>
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <button type="submit" class="btn btn-dark mx-auto my-5" id="promote">Click to Promote!</button>
+    </div>
+</div>
+
+
+<script>
+
+const source = document.getElementById("source");
+const destination = document.getElementById("destination");
+const filterByStd = document.getElementById("filterStd");
+const filterBySec = document.getElementById("filterSec");
+const promote = document.getElementById("promote");
+const END_POINT = `/dashboard/json`;
+
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function moveForward(){
+    let list = document.querySelectorAll("#source li");
+    removeAllChildNodes(source);
+    for(let li = 0; li < list.length; li++) {
+        destination.appendChild(list[li]);
+    };
+};
+
+function moveBackward(){
+    let list = document.querySelectorAll("#destination li");
+    removeAllChildNodes(destination);
+    for(let li = 0; li < list.length; li++) {
+        source.appendChild(list[li]);
+    };
+};
+
+function drop(ev, el) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    el.appendChild(document.getElementById(data));
+}
+
+
+// Function to fetch DB results to display
+
+async function getData(url){
+    const response = await fetch(url);
+    const data = await response.json();
+    return data.data;
+};
+
+// Removes all child inside an element
+
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    };
+};
+
+// Function which loads on first (during every page load) returns all the data"s from DB
+
+async function main() {
+
+    let url = END_POINT;
+    const items = await getData(url);
+    filteredList(items);
+    
+};
+
+function filteredList(studentList){
+    removeAllChildNodes(source);
+    let items = studentList;
+    for (let data in items){
+        let li = document.createElement("li");
+        li.className = "list-group-item";
+        li.addEventListener("dragstart", function () {drag(event)});
+        li.draggable = "true";
+        li.id = items[data]._id
+        li.innerHTML = items[data].name + ` (${items[data].classes.class} ${items[data].classes.section})`
+        source.appendChild(li);
+    };
+};
+
+filterByStd.onchange = async () => {
+
+    let items = await getData(END_POINT);
+
+    if(filterBySec.value != "All" && filterByStd.value == "All") {
+        let filteredItems = items.filter(eachField => (eachField.classes.section == filterBySec.value));
+        filteredList(filteredItems);
+    } else if (filterBySec.value != "All" && filterByStd.value != "All"){
+        let filteredItems = items.filter(eachField => (eachField.classes.class == filterByStd.value) && (eachField.classes.section == filterBySec.value));
+        filteredList(filteredItems);
+    } else if (filterBySec.value == "All" && filterByStd.value != "All") {
+        let filteredItems = items.filter(eachField => (eachField.classes.class == filterByStd.value));
+        filteredList(filteredItems);
+    } else { main() };
+
+};
+
+filterBySec.onchange = async () => {
+
+    let items = await getData(END_POINT);
+
+    if(filterBySec.value != "All" && filterByStd.value == "All") {
+        let filteredItems = items.filter(eachField => (eachField.classes.section == filterBySec.value));
+        filteredList(filteredItems);
+    } else if (filterBySec.value != "All" && filterByStd.value != "All"){
+        let filteredItems = items.filter(eachField => (eachField.classes.class == filterByStd.value) && (eachField.classes.section == filterBySec.value));
+        filteredList(filteredItems);
+    } else if (filterBySec.value == "All" && filterByStd.value != "All") {
+        let filteredItems = items.filter(eachField => (eachField.classes.class == filterByStd.value));
+        filteredList(filteredItems);
+    } else { main() };
+
+};
+
+promote.addEventListener("click", async () => {
+
+    let list = document.querySelectorAll("#destination li");
+    let postData = new Array();
+
+    if(list.length > 0){
+
+        for(let li = 0; li < list.length; li++) {
+            postData.push(list[li].id);
+        };
+    };
+
+    post("/students/promote", {list: postData});
+
+});
+
+function post(path, params, method="post") {
+    const form = document.createElement("form");
+    form.method = method;
+    form.action = path;
+    for (const key in params) {
+      if (params.hasOwnProperty(key)) {
+        const hiddenField = document.createElement("input");
+        hiddenField.type = "hidden";
+        hiddenField.name = key;
+        hiddenField.value = params[key];
+        form.appendChild(hiddenField);
+      };
+    };
+    document.body.appendChild(form);
+    form.submit();
+};
+
+document.onload = main();
+
+</script>

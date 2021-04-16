@@ -14,6 +14,8 @@ const incomeRoute = require('./Routes/IncomeSchema');
 const revenueRoute = require('./Routes/Revenue');
 const reportRoute = require('./Routes/ReportCard');
 
+//Development Phase
+
 const setAcademicYear = async () => {
     const retrieve = await year.find({});
     if (retrieve.length == 0){

@@ -11,8 +11,8 @@ const rows = 10;
 function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
-    };
-};
+    }
+}
 
 // Function to return if no search results are found in DB
 
@@ -25,7 +25,7 @@ function noResultsFound (wrapper) {
         <td></td>`;
     item_element.innerHTML = item_head;
     wrapper.appendChild(item_element);
-};
+}
 
 // Function to return data matching the search results
 
@@ -36,10 +36,10 @@ function searchTable (value, array){
         let name = array[i].name.toString().toLowerCase();
         if(name.includes(searchVal)){
         filteredData.push(array[i])
-        };
-    };
+        }
+    }
     return filteredData
-};
+}
 
 // Function to fetch DB results to display
 
@@ -47,7 +47,7 @@ async function getData(url){
     const response = await fetch(url);
     const data = await response.json();
     return data.data;
-};
+}
 
 // Function to add table rows with populated value from DB (Fetched results)
 
@@ -98,9 +98,9 @@ function DisplayList (items, wrapper, rows_per_page, page) {
 
         item_element.innerHTML = item_head;
         wrapper.appendChild(item_element);
-    };
+    }
 
-};
+}
 
 // Function which creates Pagination function to all buttons (Number of trimmed table pages from DB)
 
@@ -121,7 +121,7 @@ function SetupPagination (items, wrapper, rows_per_page, page_count) {
         let li = PaginationButton(page, items);
         wrapper.appendChild(li);
 
-    };
+    }
 
     let liLast = document.createElement("li");
     let anchorLast = document.createElement("a");
@@ -131,7 +131,7 @@ function SetupPagination (items, wrapper, rows_per_page, page_count) {
     liLast.appendChild(anchorLast);
     wrapper.appendChild(liLast);
 
-};
+}
 
 // Function which creates & add pagination button and active button class
 
@@ -156,7 +156,7 @@ function PaginationButton (page, items) {
     });
 
     return li;
-};
+}
 
 // Function which give clicking/transition functionality to page buttons
 
@@ -170,34 +170,34 @@ function paginateClickEvent (page_count, mainElement) {
         maxLeft = 1;
         if(page_count > 5) maxRight = 5;
         else maxRight = page_count
-    };
+    }
 
     if (maxRight > page_count) {
         maxLeft = page_count - (6 - 1);
         maxRight = page_count;
-    };
+    }
 
     for (let viewPage = maxLeft; viewPage < maxRight; viewPage++) {
 
         if (maxLeft != 1){
         for (let add = 0; add < maxLeft; add++){
             mainElement[add].classList.add("hide");
-        };
-        };
+        }
+        }
 
         if (maxLeft == 1) mainElement[0].classList.remove("hide");
 
         if (maxRight != page_count) {
         for (let add = maxRight; add < page_count; add++){
             mainElement[add].classList.add("hide");
-        };
-        };
+        }
+        }
 
         if(page_count > 5) mainElement[viewPage].classList.remove("hide");
         
-    };
+    }
 
-};
+}
 
 // Function which sets up initial page buttons 
 
@@ -211,7 +211,7 @@ function initialSetup(first, last, mainElement, firstChild, lastChild, finalPage
 
     if (last > 5) {
         last = 5;
-    };
+    }
 
     firstChild.addEventListener("click", function () {
         mainElement[first].click();
@@ -219,8 +219,8 @@ function initialSetup(first, last, mainElement, firstChild, lastChild, finalPage
 
     for (let add = first; add < last; add++){
         mainElement[add].classList.remove("hide");
-    };
-};
+    }
+}
 
 // Function which returns search results and appends it to table
 
@@ -245,7 +245,7 @@ function searchFilter(returnData, originalData){
 
         if (page_count > 5) {
         pagination_element.addEventListener("click", function(){paginateClickEvent(page_count, allEle)});
-        };
+        }
         
     } else {
 
@@ -253,7 +253,7 @@ function searchFilter(returnData, originalData){
         removeAllChildNodes(pagination_element);
         noResultsFound (list_element);
 
-    };
+    }
 }
 
 // Function which loads on first (during every page load) returns all the data's from DB
@@ -274,33 +274,33 @@ async function main() {
     initialSetup(0, page_count, allEle, firstLi, lastLi, page_count);
     pagination_element.addEventListener("click", function(){paginateClickEvent(page_count, allEle)});
 
-};
+}
 
 // Search Box functionality
 
-document.getElementById("SearchBox").addEventListener("keyup", async function (){
-
-    let items = await getData(END_POINT);
-
-    if(filterBySec.value != "All" && filterByStd.value == "All" && filterByRTE.value != "All") {
-        const filteredItems = items.filter(eachField => (eachField.classes.section == filterBySec.value) && (eachField.classes.RTE == filterByRTE.value));
-    } else if (filterBySec.value != "All" && filterByStd.value != "All" && filterByRTE.value != "All"){
-        const filteredItems = items.filter(eachField => (eachField.classes.class == filterByStd.value) && (eachField.classes.section == filterBySec.value) && (eachField.classes.RTE == filterByRTE.value));
-    } else if (filterBySec.value == "All" && filterByStd.value != "All" && filterByRTE.value != "All") {
-        const filteredItems = items.filter(eachField => (eachField.classes.class == filterByStd.value) && (eachField.classes.RTE == filterByRTE.value));
-    } else if (filterBySec.value != "All" && filterByStd.value != "All" && filterByRTE.value == "All"){
-        const filteredItems = items.filter(eachField => (eachField.classes.class == filterByStd.value) && (eachField.classes.section == filterBySec.value));
-    } else if (filterBySec.value == "All" && filterByStd.value == "All" && filterByRTE.value != "All"){
-        const filteredItems = items.filter(eachField => eachField.classes.RTE == filterByRTE.value);
-    } else if (filterBySec.value == "All" && filterByStd.value != "All" && filterByRTE.value == "All"){
-        const filteredItems = items.filter(eachField => eachField.classes.class == filterByStd.value);
-    } else if (filterBySec.value != "All" && filterByStd.value == "All" && filterByRTE.value == "All"){
-        const filteredItems = items.filter(eachField => eachField.classes.section == filterBySec.value);
-    } 
-
-    let searchString = document.getElementById("SearchBox").value;
-    let returnData = searchTable(searchString, (typeof filteredItems === "undefined") ? items : filteredItems);
-    searchFilter(returnData, items);
+document.getElementById("SearchBox").addEventListener("keyup", async function (e){
+    if (e.key === "Enter") {
+        let items = await getData(END_POINT);
+        let filteredItems = undefined;
+        if(filterBySec.value != "All" && filterByStd.value == "All" && filterByRTE.value != "All") {
+            filteredItems = items.filter(eachField => (eachField.classes.section == filterBySec.value) && (eachField.classes.RTE == filterByRTE.value));
+        } else if (filterBySec.value != "All" && filterByStd.value != "All" && filterByRTE.value != "All"){
+            filteredItems = items.filter(eachField => (eachField.classes.class == filterByStd.value) && (eachField.classes.section == filterBySec.value) && (eachField.classes.RTE == filterByRTE.value));
+        } else if (filterBySec.value == "All" && filterByStd.value != "All" && filterByRTE.value != "All") {
+            filteredItems = items.filter(eachField => (eachField.classes.class == filterByStd.value) && (eachField.classes.RTE == filterByRTE.value));
+        } else if (filterBySec.value != "All" && filterByStd.value != "All" && filterByRTE.value == "All"){
+            filteredItems = items.filter(eachField => (eachField.classes.class == filterByStd.value) && (eachField.classes.section == filterBySec.value));
+        } else if (filterBySec.value == "All" && filterByStd.value == "All" && filterByRTE.value != "All"){
+            filteredItems = items.filter(eachField => eachField.classes.RTE == filterByRTE.value);
+        } else if (filterBySec.value == "All" && filterByStd.value != "All" && filterByRTE.value == "All"){
+            filteredItems = items.filter(eachField => eachField.classes.class == filterByStd.value);
+        } else if (filterBySec.value != "All" && filterByStd.value == "All" && filterByRTE.value == "All"){
+            filteredItems = items.filter(eachField => eachField.classes.section == filterBySec.value);
+        }
+        let searchString = document.getElementById("SearchBox").value;
+        let returnData = searchTable(searchString, (typeof filteredItems === "undefined") ? items : filteredItems);
+        searchFilter(returnData, items);
+    }
 });
 
 // Filter by selected value (Standard)
@@ -330,7 +330,7 @@ filterByStd.onchange = async () => {
         let filteredItems = items.filter(eachField => eachField.classes.section == filterBySec.value);
         searchFilter(filteredItems, items);
     } 
-    else {main()};
+    else {main()}
 
     document.getElementById("SearchBox").value = "";
 }
@@ -361,10 +361,10 @@ filterBySec.onchange = async () => {
         let filteredItems = items.filter(eachField => eachField.classes.section == filterBySec.value);
         searchFilter(filteredItems, items);
     } 
-    else {main()};
+    else {main()}
 
     document.getElementById("SearchBox").value = "";
-};
+}
 
 filterByRTE.onchange = async () => {
     let items = await getData(END_POINT);
@@ -391,7 +391,7 @@ filterByRTE.onchange = async () => {
         let filteredItems = items.filter(eachField => eachField.classes.section == filterBySec.value);
         searchFilter(filteredItems, items);
     } 
-    else {main()};
+    else {main()}
 
     document.getElementById("SearchBox").value = "";
 }

@@ -8,11 +8,6 @@ const { Router } = require('express');
 router.get('/:studentID', catchAsync(async (req, res) => {
     const { studentID } = req.params;
     let student = await Student.findById(studentID).populate('mark');
-    if(student.mark == undefined) {
-        var studentMark = new ReportCard({});
-        student = await Student.findByIdAndUpdate(studentID, {mark:studentMark}, {new:true});
-        await studentMark.save();
-    };
     res.render('Students/Report', {student:student, report:student.mark == undefined ? studentMark : student.mark});
 }));
 

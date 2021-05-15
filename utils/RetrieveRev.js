@@ -30,7 +30,7 @@ module.exports.retireveRevenue = async (standard, method, preYr = undefined) => 
         };
 
         if(method == 'POST') {
-            const studentRevenue = await new Revenue ({ newStudent:totalNew, oldStudent: totalOld == undefined ? totalNew : totalOld });
+            const studentRevenue = new Revenue ({ newStudent:totalNew, oldStudent: totalOld == undefined ? totalNew : totalOld });
             return studentRevenue;
         } else {
             return { newStudent:totalNew, oldStudent: totalOld == 0 ? totalNew : totalOld };

@@ -6,7 +6,6 @@ const Revenue = require('../Models/Revenue');
 const year = require('../Models/AcademicYear');
 
 router.post('/:id', catchAsync(async (req, res, next) => {
-    console.log(req.body)
     const { id } = req.params;
     const studentRev = await Student.findById(id).populate('revenue');
     const update = await Revenue.findOneAndUpdate({_id: studentRev.revenue._id}, {$push:{amountPaid: req.body}});
@@ -27,9 +26,15 @@ router.get('/:item', catchAsync(async (req, res, next) => {
     for (let l in studentRev.revenue.amountPaid){
         if(studentRev.revenue.amountPaid[l].academicYr == currentAcademicYear[0].year){
             paid = paid + studentRev.revenue.amountPaid[l].paid
-        };        
-    };
+        }        
+    }
     res.render('Students/Revenue', {studentRev:studentRev, workingYear:currentAcademicYear[0].year, totalAmountPaid: paid});
+}));
+
+router.get('/json/:studentID', catchAsync(async(req, res, next) => {
+    const { studentID } = req.params;
+    let retrieveRev = await Revenue.findById(studentID);
+    res.status(200).json({data:retrieveRev});
 }));
 
 

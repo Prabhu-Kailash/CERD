@@ -14,12 +14,12 @@ const incomeRoute = require('./Routes/IncomeSchema');
 const revenueRoute = require('./Routes/Revenue');
 const reportRoute = require('./Routes/ReportCard');
 
-//Development Phase
+// Development Phase
 
 const setAcademicYear = async () => {
     const retrieve = await year.find({});
     if (retrieve.length == 0){
-        const academic = await new year ({ year: new Date().getFullYear() });
+        const academic = new year ({ year: new Date().getFullYear() });
         await academic.save();
     };
 };

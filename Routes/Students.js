@@ -9,6 +9,7 @@ const Revenue = require('../Models/Revenue');
 const ExpressError = require('../utils/ExpressError');
 const {retireveRevenue} = require('../utils/RetrieveRev');
 const Standards = require('../Models/Standards');
+const ReportCard = require('../Models/ReportCard');
 const schoolStandard = {class:['PreKG', 'LKG','UKG','I', 'II', 'III', 'IV', 'V'], sec:['A', 'B', 'C'], RTE:['No', 'Yes']};
 
 
@@ -21,16 +22,19 @@ router.post('/', validateDB, catchAsync(async (req, res, next) => {
     if (verifyAdmission.length > 0) {
         throw new ExpressError('Admission Number entered already exist in DB (Admission number should be unique)!', 404);
     } else {
-        const createStudent = await new Student(req.body.student);
-        const createParent = await new Parent(req.body.parents);
-        const createStandard = await new Standard(req.body.class);
+        const createStudent = new Student(req.body.student);
+        const createParent = new Parent(req.body.parents);
+        const createStandard = new Standard(req.body.class);
+        const createMark = new ReportCard ({});
         const studentRevenue = await retireveRevenue(createStandard, 'POST');
         createStudent.parents = createParent;
         createStudent.classes = createStandard;
         createStudent.revenue = studentRevenue;
+        createStudent.mark = createMark;
         await studentRevenue.save();
         await createStandard.save();
         await createStudent.save();
+        await createMark.save();
         await createParent.save();
         res.redirect('/dashboard');
     };

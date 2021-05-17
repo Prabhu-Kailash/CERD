@@ -11,6 +11,7 @@ const year = new Schema({
 
 year.post('findOneAndUpdate', async function(preYr) {
     if(preYr) {
+        console.log(preYr)
         const allActiveStudents = await mongoose.model('Students').find({current: 'Active'}).populate('classes').populate('revenue');
         for (let student in allActiveStudents){
             const updatedRevenue = await retireveRevenue(allActiveStudents[student].classes, 'PUT', preYr);

@@ -19,21 +19,23 @@
       <!-- Total Numbers of Students -->
 
         <div class="col-sm d-flex mb-3">
+          <div class="d-flex">
             <div class="card">
-                <a class="mx-auto" href="/dashboard/studentsList"><img class="card-img-top" style="width: 6rem; height: 5rem;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6zH7KEUQHpTTUHSIu-bNh0HvKG53bttpb-g&usqp=CAU" alt="Card image cap"></a>
-                <div class="card-body">
-                  <p class="card-text">Total Students : <a href="/dashboard/studentsList" style="text-decoration: none;"><strong><%= students.length %></strong></a></p>
-                </div>
-            </div>
+              <img class="card-img-top mx-auto mt-1" style="width: 6rem; height: 5rem;" src="Images/Images.png" alt="Card image cap">
+              <div class="card-body">
+                <p class="card-text">Total Students : <strong><%= students.length %></strong></p>
+              </div>
+          </div>
+          </div>
             <div class="d-flex">
                 <div class="card">
-                  <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="https://i.pinimg.com/originals/60/7b/a1/607ba1795c55444e38bed385a9272932.png" alt="Card image cap">
+                  <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="Images/Captain.png" alt="Card image cap">
                     <div class="card-body">
                         <p class="my-0">Number of Boys : <%= numberData.boys  %></p>
                     </div>
                 </div>
                 <div class="card">
-                  <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="https://i.pinimg.com/originals/a2/26/91/a226914001492533a363c320ba6dba4c.png" alt="Card image cap">
+                  <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="Images/Wonder_Woman.png" alt="Card image cap">
                     <div class="card-body">
                         <p class="my-0">Number of Girls : <%= numberData.girls  %></p>
                     </div>
@@ -45,22 +47,22 @@
 
         <div class="col-sm d-flex mb-3">
           <div class="card">
-              <img class="card-img-top mx-auto" style="width: 6rem; height: 5rem;" src="https://img.freepik.com/free-vector/teacher-standing-near-blackboard-holding-stick-isolated-flat-vector-illustration-cartoon-woman-character-near-chalkboard-pointing-alphabet_74855-8600.jpg?size=626&ext=jpg" alt="Card image cap">
+              <img class="card-img-top mx-auto" style="width: 6rem; height: 5rem;" src="Images/Faculties.jpg" alt="Card image cap">
               <div class="card-body">
-                <p class="card-text">Faculties : <strong>8</strong></p>
+                <p class="card-text">Faculties : <strong><%= numberData.activeStaff %></strong></p>
               </div>
           </div>
           <div class="d-flex">
               <div class="card">
-                <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="https://cdn1.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-sporty-brunette-2-512.png" alt="Card image cap">
+                <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="Images/Tech.webp" alt="Card image cap">
                   <div class="card-body">
-                      <p class="my-0">Teaching Staffs : 6</p>
+                      <p class="my-0">Teaching Staffs : <%= numberData.techStaff %></p>
                   </div>
               </div>
               <div class="card">
-                <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="https://cdn1.iconfinder.com/data/icons/female-avatars-vol-1/256/female-portrait-avatar-profile-woman-assistant-brunette-2-512.png" alt="Card image cap">
+                <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="Images/NonTech.webp" alt="Card image cap">
                   <div class="card-body">
-                      <p class="my-0">Non-Teaching Staffs : 2</p>
+                      <p class="my-0">Non-Teaching Staffs : <%= numberData.nonTechStaff %></p>
                   </div>
               </div>
           </div>
@@ -70,7 +72,7 @@
 
         <div class="col-sm d-flex mb-3">
           <div class="card">
-            <img class="card-img-top mx-auto" style="width: 6rem; height: 5rem;" src="https://mir-s3-cdn-cf.behance.net/project_modules/1400/7691a138650505.598fa119bce1e.jpg" alt="Card image cap">
+            <img class="card-img-top mx-auto" style="width: 6rem; height: 5rem;" src="Images/IronMan.jpg" alt="Card image cap">
             <div class="card-body">
               <p class="card-text"><%= numberData.year %>: <%= numberData.admission  %></p>
               <p class="card-text"><%= numberData.year - 1 %>: <%= numberData.lastyr  %></p>
@@ -78,13 +80,13 @@
         </div>
           <div class="d-flex">
               <div class="card">
-                <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="https://i.pinimg.com/originals/cc/35/13/cc35139a1e84ce860f2c627e1d6c232c.png" alt="Card image cap">
+                <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="Images/SpiderMan.png" alt="Card image cap">
                   <div class="card-body">
                       <p class="my-0">Active: <%= numberData.active  %></p>
                   </div>
               </div>
               <div class="card">
-                <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQP1S9B0WRW23C_1kPY05Lg5PTVdQHeqMcPQg&usqp=CAU" alt="Card image cap">
+                <img class="card-img-top mx-auto mt-1" style="width: 5rem; height: 5rem;" src="Images/Transferred.png" alt="Card image cap">
                   <div class="card-body">
                       <p class="my-0">Transferred: <a href="/transfer" style="text-decoration: none; color: darkred;"><strong><%= numberData.transfer  %></strong></a></p>
                   </div>
@@ -191,6 +193,33 @@
       </div>
       <div class="d-flex flex-row-reverse mx-3">
           <h6>* Click on each <strong style="color: darkred;">"Student Name"</strong> to view specific student's previous/most recent report card.</h6>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-1">
+            <hr style="border: 7px none grey; border-top-style: dotted; background-color: white;">
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <h2 class="text-center">Staff List</h2>
+      </div>
+
+      <div class="row mx-5 my-3 table-responsive-sm">
+        <table class="table container table-hover text-center">
+          <thead>
+            <tr>
+              <th scope="col">Staff ID</th>
+              <th scope="col">Staff Name</th>
+              <th scope="col">DOJ</th>
+              <th scope="col">Domain</th>
+              <th scope="col">Action</th>
+              <th scope="col">Transfer</th>
+            </tr>
+          </thead>
+          <tbody id="Slist">
+          </tbody>
+        </table>
       </div>
 </div>
 

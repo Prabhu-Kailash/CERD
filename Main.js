@@ -13,6 +13,7 @@ const transferRoute = require('./Routes/TransferStudents');
 const incomeRoute = require('./Routes/IncomeSchema');
 const revenueRoute = require('./Routes/Revenue');
 const reportRoute = require('./Routes/ReportCard');
+const staffRoute = require('./Routes/Staff');
 
 // Development Phase
 
@@ -59,6 +60,7 @@ app.use('/transfer', transferRoute);
 app.use('/IncomeSchema', incomeRoute);
 app.use('/Revenue', revenueRoute);
 app.use('/Report', reportRoute);
+app.use('/staff', staffRoute);
 
 
 // Academic Year

@@ -1,7 +1,4 @@
 const mongoose = require('mongoose');
-const IncomeSchema = require('./IncomeSchema');
-const year = require('./AcademicYear');
-const Revenue = require('./Revenue');
 const { Schema } = mongoose;
 
 const classSchema = new Schema({

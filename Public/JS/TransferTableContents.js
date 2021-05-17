@@ -1,4 +1,5 @@
 const END_POINT = `/dashboard/Tjson`;
+const SEND_POINT = `/staff/Tjson`;
 const list_element = document.getElementById("list");
 const pagination_element = document.getElementById("pagination");
 const filterByStd = document.getElementById("filterStd");
@@ -47,6 +48,54 @@ async function getData(url){
     const response = await fetch(url);
     const data = await response.json();
     return data.data;
+}
+
+// Function to add table rows with populated value (Staff results) from DB (Fetched results)
+
+function staffList(items, wrapper, rows_per_page, page){
+    removeAllChildNodes(wrapper);
+    page--;
+
+    let start = rows_per_page * page;
+    let end = start + rows_per_page;
+    let paginatedItems = items.slice(start, end);
+
+    for (let i = 0; i < paginatedItems.length; i++) {
+
+        let item = paginatedItems[i];
+        let item_element = document.createElement("tr");
+        let item_head = `<th scope="row">${item.admissionNumber}</th>
+            <th scope="row">${item.name}</th>
+            <td>${item.DOJ}</td>
+            <td>${item.detail}</td>
+            <td><a href="/staff/edit/${item._id}/"><button class="btn btn-success mr-5">Update</button></a>
+            <form action="/staff/re-add/${item._id}/?_method=PATCH" method="POST" style="display: inline;">
+                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#Modal${item._id}">Re-Add</button>
+                <!-- Modal -->
+                <div class="modal fade" id="Modal${item._id}" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalLabel">Warning!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    <h4>Do you want to change this staff to Active?</h4>
+                    <br>
+                    <p>This action will add this record to Active list of staff.<p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, I changed my mind!</button>
+                        <button type="submit" class="btn btn-danger">Yes! Please.</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </form>
+            </td>`;
+        item_element.innerHTML = item_head;
+        wrapper.appendChild(item_element);
+    }
 }
 
 // Function to add table rows with populated value from DB (Fetched results)
@@ -263,8 +312,10 @@ async function main() {
     let url = END_POINT;
     const items = await getData(url);
     const page_count = Math.ceil(items.length / rows);
+    const staff_items = await getData(SEND_POINT);
 
     DisplayList(items, list_element, rows, current_page);
+    staffList(staff_items, document.getElementById("Slist"), staff_items.length, current_page);
     SetupPagination(items, pagination_element, rows, page_count);
 
     let allEle = pagination_element.querySelectorAll(".page-item");

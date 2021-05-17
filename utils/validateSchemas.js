@@ -29,6 +29,26 @@ ValidateStudentsSchema = joi.object({
     })
 });
 
+ValidateStaffSchema = joi.object({
+    name: joi.string().required(),
+    aadhar: joi.number().unsafe().required(),
+    DOB: joi.date().iso().required(),
+    religion: joi.string(),
+    caste: joi.string(),
+    gender: joi.string().valid('Male', 'Female').required(),
+    detail: joi.string().valid('Tech', 'NonTech').required(),
+    fatherName: joi.string().required(),
+    motherName: joi.string().required(),
+    doorNumber: joi.string(),
+    streetName: joi.string(),
+    cityName: joi.string(),
+    pincode: joi.number(),
+    mainContact: joi.number().integer().max(9999999999).required(),
+    alternateContact: joi.number().integer().max(9999999999),
+    admissionNumber: joi.number().unsafe().required(),
+    DOJ: joi.date().iso().required()
+});
+
 ValidateIncomeSchema = joi.object({
     particulars: joi.string().required(),
     PreKG: joi.number().required(),
@@ -49,8 +69,8 @@ module.exports.validateDB = (req, res, next) => {
         throw new ExpressError(msg, 400);
     } else {
         next();
-    };
-};
+    }
+}
 
 module.exports.validateIncome = (req, res, next) => {
     const { error } = ValidateIncomeSchema.validate(req.body);
@@ -59,5 +79,15 @@ module.exports.validateIncome = (req, res, next) => {
         throw new ExpressError(msg, 400);
     } else {
         next();
-    };
-};
+    }
+}
+
+module.exports.ValidateStaffSchema = (req, res, next) => {
+    const { error } = ValidateStaffSchema.validate(req.body.staff);
+    if(error) {
+        const msg = error.details.map(el => el.message).join(' ');
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+}

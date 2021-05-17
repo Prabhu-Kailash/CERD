@@ -1,0 +1,138 @@
+<% layout('layouts/boilerplate') %>
+<div class="container mt-5">
+    <div class="row">
+            <h1 class="text-center">Edit Staff Details</h1>
+            <form action="/staff/<%=staff._id%>?_method=PUT" method="POST" class="needs-validation" novalidate>
+
+                <!-- staff Details Section -->
+                
+                <div class="row mb-2">
+                    <div class="col">
+                        <div>
+                            <label class="form-label" for="name">staff Name:</label>
+                            <input class="form-control" type="text" id="name" name="staff[name]" value="<%= staff.name %>" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div>
+                            <label class="form-label" for="aadhar">Aadhar Number:</label>
+                            <input class="form-control" type="number" id="aadhar" name="staff[aadhar]" value="<%= staff.aadhar %>" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="DOB">Date of Birth:</label>
+                    <input class="form-control" type="date" id="DOB" name="staff[DOB]" data-provide="datepicker" value="<%= staff.DOB %>" required>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col">
+                      <input type="text" class="form-control" name="staff[religion]" placeholder="Religion" aria-label="Religion" value="<%= staff.religion %>">
+                    </div>
+                    <div class="col">
+                      <input type="text" class="form-control" name="staff[caste]" placeholder="Caste" aria-label="Caste" value="<%= staff.caste %>">
+                    </div>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" ng-model="gender" name="staff[gender]" id="Male" value="Male" <%= staff.gender ==='Male' ? "checked" : "" %>>
+                    <label class="form-check-label" for="Male">
+                    Male
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" ng-model="gender" name="staff[gender]" id="Female" value="Female" <%= staff.gender ==='Female' ? "checked" : "" %>>
+                    <label class="form-check-label" for="Female">
+                    Female
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" ng-model="detail" name="staff[detail]" id="Male" value="Tech" <%= staff.detail ==="Tech" ? "checked" : "" %>>
+                    <label class="form-check-label" for="Male">
+                    Technical Staff
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" ng-model="detail" name="staff[detail]" id="Female" value="NonTech" <%= staff.detail ==="NonTech" ? "checked" : "" %>>
+                    <label class="form-check-label" for="Female">
+                    Non-Technical Staff
+                    </label>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-1">
+                        <hr style="border: 7px none grey; border-top-style: dotted; background-color: white;">
+                    </div>
+                </div>
+
+                <!-- Parent's Details Section -->
+
+                <h1 class="text-center">Parent's Details</h1>
+                
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label" for="FName">Father's Name:</label>
+                        <input type="text" name="staff[fatherName]" id="FName" class="form-control" placeholder="Father's Name" aria-label="Father's Name" value="<%= staff.fatherName %>">
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="MName">Mother's Name:</label>
+                        <input type="text" name="staff[motherName]" id="MName" class="form-control" placeholder="Mother's Name" aria-label="Mother's Name" value="<%= staff.motherName %>">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <input type="text" name="staff[doorNumber]" id="DoorNo" class="form-control" placeholder="Door Number" aria-label="Door Number" value="<%= staff.doorNumber %>" required>
+                    </div>
+                    <div class="col">
+                        <input type="text" name="staff[streetName]" id="streetName" class="form-control" placeholder="Street Name" aria-label="Street Name" value="<%= staff.streetName %>" required>
+                    </div>
+                    <div class="col">
+                        <input type="text" name="staff[cityName]" id="cityName" class="form-control" placeholder="City" aria-label="City" value="<%= staff.cityName %>" required>
+                    </div>
+                    <div class="col">
+                        <input type="number" name="staff[pincode]" id="pincode" class="form-control" placeholder="Pincode" aria-label="Pincode" value="<%= staff.pincode %>" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label" for="mainContact">Main Contact Number:</label>
+                        <input type="number" name="staff[mainContact]" id="mainContact" class="form-control" value="<%= staff.mainContact %>" required>
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="alternateContact">Alternate Contact Number:</label>
+                        <input type="number" name="staff[alternateContact]" id="alternateContact" class="form-control" value="<%= staff.alternateContact %>">
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-1">
+                        <hr style="border: 7px none grey; border-top-style: dotted; background-color: white;">
+                    </div>
+                </div>
+
+                <!-- Admission Details -->
+
+                <h1 class="text-center">Admission Details</h1>
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label" for="admissionNumber">Admission Number:</label>
+                        <input type="number" name="staff[admissionNumber]" id="admissionNumber" class="form-control" value="<%= staff.admissionNumber %>" required>
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="DOJ">Date of Joining:</label>
+                        <input class="form-control" type="date" id="DOJ" name="staff[DOJ]" data-provide="datepicker" value="<%= staff.DOJ %>" required>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center my-3 text-center">
+                    <div class="col">
+                        <button class="btn btn-success mb-2">Update</button>
+                    </div>
+                </div>
+
+            </form>
+    </div>
+</div>
+
+<%- include('../partials/validateForm') %> 

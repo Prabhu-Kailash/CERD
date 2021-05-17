@@ -18,7 +18,7 @@ router.post('/', validateIncome, catchAsync(async(req, res, next) => {
 }));
 
 router.get('/:year', catchAsync(async(req, res, next) => {
-    const yearlyIncome = await IncomeSchema.find({academicYear: req.params.year})
+    const yearlyIncome = await IncomeSchema.find({academicYear: req.params.year});
     res.status(200).json({data: yearlyIncome});
 }));
 

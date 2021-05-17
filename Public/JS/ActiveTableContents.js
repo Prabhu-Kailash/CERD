@@ -1,4 +1,5 @@
 const END_POINT = `/dashboard/json`;
+const SEND_POINT = `/staff/json`;
 const list_element = document.getElementById("list");
 const pagination_element = document.getElementById("pagination");
 const filterByStd = document.getElementById("filterStd");
@@ -52,9 +53,79 @@ async function getData(url){
     return data.data;
 }
 
+// Function to add table rows with populated value (Staff results) from DB (Fetched results)
+
+function staffList(items, wrapper, rows_per_page, page){
+    removeAllChildNodes(wrapper);
+    page--;
+
+    let start = rows_per_page * page;
+    let end = start + rows_per_page;
+    let paginatedItems = items.slice(start, end);
+
+    for (let i = 0; i < paginatedItems.length; i++) {
+
+        let item = paginatedItems[i];
+        let item_element = document.createElement("tr");
+        let item_head = `<th scope="row">${item.admissionNumber}</th>
+            <th scope="row">${item.name}</th>
+            <td>${item.DOJ}</td>
+            <td>${item.detail}</td>
+            <td><a href="/staff/edit/${item._id}/"><button class="btn btn-success mr-5">Update</button></a>
+            <form action="/staff/delete/${item._id}/?_method=DELETE" method="POST" style="display: inline;">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Modal${item._id}">Delete</button>
+                <!-- Modal -->
+                <div class="modal fade" id="Modal${item._id}" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalLabel">Warning!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are you sure?</h4>
+                        <br>
+                        <p>This action will remove the record from DB.<p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </form>
+            </td>
+            <td><form action="/staff/transfer/${item._id}/?_method=PATCH" method="POST" style="display: inline;">
+                <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#TModal${item._id}">Terminate</button>
+                <!-- Modal -->
+                <div class="modal fade" id="TModal${item._id}" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalLabel">Confirm!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Do you want to transfer the student?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        <button type="submit" class="btn btn-warning">Yes!</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </form>
+            </td>`;
+        item_element.innerHTML = item_head;
+        wrapper.appendChild(item_element);
+    }
+}
+
 // Function to add table rows with populated value from DB (Fetched results)
 
-function DisplayList (items, wrapper, rows_per_page, page) {
+function displayList (items, wrapper, rows_per_page, page) {
 
     removeAllChildNodes(wrapper);
     page--;
@@ -174,7 +245,7 @@ function PaginationButton (page, items) {
     if (current_page == page) li.classList.add("active");
 
     li.addEventListener("click", function () {
-        DisplayList(items, list_element, rows, page);
+        displayList(items, list_element, rows, page);
         let current_btn = document.querySelector("li.active");
         current_btn.classList.remove("active");
         li.classList.add("active"); 
@@ -259,7 +330,7 @@ function searchFilter(returnData, originalData){
 
         const page_count = Math.ceil(returnData.length / rows);
 
-        DisplayList(returnData, list_element, rows, current_page);
+        displayList(returnData, list_element, rows, current_page);
         SetupPagination(returnData, pagination_element, rows, page_count);
 
         let allEle = pagination_element.querySelectorAll(".page-item");
@@ -287,10 +358,11 @@ async function main() {
 
     let url = END_POINT;
     const items = await getData(url);
+    const staff_items = await getData(SEND_POINT);
     const page_count = Math.ceil(items.length / rows);
  
-
-    DisplayList(items, list_element, rows, current_page);
+    staffList(staff_items, document.getElementById("Slist"), staff_items.length, current_page);
+    displayList(items, list_element, rows, current_page);
     SetupPagination(items, pagination_element, rows, page_count);
 
     let allEle = pagination_element.querySelectorAll(".page-item");

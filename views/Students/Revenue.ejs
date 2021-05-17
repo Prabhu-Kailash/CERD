@@ -3,7 +3,7 @@
   <h3 class="text-center my-5">Student Money Transaction Details</h3>
     <% if(studentRev) { %> 
         <div class="row mx-5 my-3 table-responsive-sm">
-          <table class="table container table-hover text-center">
+          <table class="table container table-hover text-center" id="<%= studentRev.classes.RTE %>">
             <thead>
               <tr>
                 <th scope="col">Date</th>
@@ -20,7 +20,7 @@
                     <td id="totalpaid"></td>
                   </tr>
                   <tr id="Ban">
-                    <td><%= (studentRev.classes.DOJ <= `${workingYear + 1}-06-01` && studentRev.classes.DOJ >= `${workingYear}-06-01`) ? `New Student` : `Old Student` %></td>
+                    <td id="studentStatus"></td>
                     <td></td>
                     <td></td>
                     <td id="topay"></td>
@@ -28,7 +28,7 @@
                 <tr id="Ban">
                   <div class="row">
                     <h5 class="text-end" id="<%= studentRev.revenue._id %>">Showing details for <%= studentRev.name %></h5>
-                    <p class="text-end">Academic year : <select id="select" style="border: none; outline:0px; -webkit-appearance: button;" class="form-select-lg my-3" aria-label=".form-select-lg example" onchange="performChange()">
+                    <p class="text-end" id="<%= studentRev.classes._id %>">Academic year : <select id="select" style="border: none; outline:0px; -webkit-appearance: button;" class="form-select-lg my-3" aria-label=".form-select-lg example" onchange="performChange()">
                       <% for (let i = 1900; i < 3000; i ++) { %>
                           <option value=<%= i %> <%= workingYear === i? "selected" : "" %>><%= i %></option>
                       <% } %>  
@@ -69,25 +69,20 @@
     }
   }
 
-  function noResultsFound (wrapper) {
-    let item_element = document.createElement("tr");
-    let item_head = `<td>No Results</td>
-        <td>Found</td>
-        <td>In</td>
-        <td>Database</td>`;
-    item_element.innerHTML = item_head;
-    wrapper.insertBefore(item_element, document.getElementById("rowValue"));
-  }
-
   async function performChange(){
     removeAllChildNodes(document.getElementById("list"));
     const select = document.getElementById("select");
     let studentID = document.getElementsByTagName("h5")[0].id;
-    let items = await getData(END_POINT + `/${studentID}`);
-    let returnArray = items.amountPaid.filter(function(ele) {
+    let studentClass = document.getElementsByTagName("p")[0].id;
+    let items = await getData(END_POINT + `/${studentID}/${select.value}/${studentClass}`);
+    let returnArray = items.data1.amountPaid.filter(function(ele) {
         if(ele.academicYr == select.value) return ele;
     });
-    
+    let preVal = Date.parse((select.value + 1) + "-06-01");
+    let postVal = Date.parse((select.value) + "-06-01");
+    let toPay = ((Date.parse(items.data3) <= preVal) && (Date.parse(items.data3) >= postVal)) ? items.data2.newStudent : items.data2.oldStudent;
+    document.getElementById("topay").innerHTML = `Total amount to be paid for ${select.value}  Academic Year : ${toPay}`;
+    document.getElementById("studentStatus").innerHTML = ((Date.parse(items.data3) <= preVal) && (Date.parse(items.data3) >= postVal)) ? "New Student" : "Old Student";
     if(returnArray.length > 0) {
       let item_inside = "";
       document.getElementById("totalpaid").innerHTML = returnArray.map(ele => ele.paid).reduce((a, b) => a + b);
@@ -98,13 +93,12 @@
                   <td>${val.academicYr}</td>
                   <td>${val.description}</td>
                   <td>${val.paid}</td>
-                  <td><form action="/Revenue/<%= studentRev._id%>/${items._id}/${val._id}?_method=DELETE" method="POST">
+                  <td><form action="/Revenue/<%= studentRev._id%>/${items.data1._id}/${val._id}?_method=DELETE" method="POST">
                       <button type="submit" class="btn btn-white">x</button></a>
-                  </form></td>`
+                  </form></td>`;
         item_head.innerHTML = item_inside;
         document.getElementById("list").insertBefore(item_head, document.getElementById("rowValue"));
       }
-      document.getElementById("topay").innerHTML = "Total amount to be paid for <%= workingYear %>  Academic Year : <%= (studentRev.classes.DOJ <= `${workingYear + 1}-06-01` && studentRev.classes.DOJ >= `${workingYear}-06-01`) ? studentRev.revenue.newStudent : studentRev.revenue.oldStudent %>"
     } else {
       document.getElementById("totalpaid").innerHTML = 0;
     }

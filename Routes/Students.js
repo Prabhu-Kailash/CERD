@@ -36,6 +36,7 @@ router.post('/', validateDB, catchAsync(async (req, res, next) => {
         await createStudent.save();
         await createMark.save();
         await createParent.save();
+        req.flash('success', 'Successfully created new Student record!');
         res.redirect('/dashboard');
     };
 }));
@@ -46,18 +47,24 @@ router.put('/:id', validateDB, catchAsync(async(req, res, next) => {
     const updateParent = await Parent.findByIdAndUpdate(updateStudent.parents._id, req.body.parents, {runValidators: true, new: true});
     const updateClasses = await Standard.findByIdAndUpdate(updateStudent.classes._id, req.body.class, {runValidators: true, new: true});
     const updateRevenue = await Revenue.findByIdAndUpdate(updateStudent.revenue._id, await retireveRevenue(updateClasses, 'PUT'), {runValidators: true, new: true});
+    req.flash('success', `Successfully updated ${updateStudent.name} details!`);
     res.redirect('/dashboard');
 }));
 
 router.delete('/delete/:id', catchAsync(async(req, res, next) => {
     const {id} = req.params;
     const removeStudent = await Student.findByIdAndDelete(id);
+    req.flash('success', `Successfully deleted/removed ${removeStudent.name} details!`);
     res.redirect('/dashboard');
 }));
 
 router.get('/edit/:id', catchAsync(async (req, res, next) => {
     const {id} = req.params;
     const retrieveStudent = await Student.findById(id).populate('parents').populate('classes');
+    if(!retrieveStudent){
+        req.flash('error', "This student detail doesn't exist in DB anymore");
+        return res.redirect('/dashboard');
+    }
     res.render('Students/Edit', {student:retrieveStudent, schoolStandard});
 }));
 

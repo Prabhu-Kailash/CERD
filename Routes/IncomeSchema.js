@@ -8,11 +8,15 @@ const {validateIncome} = require('../utils/validateSchemas');
 router.get('/', catchAsync(async (req, res, next) => {
     const currentAcademicYear = await year.find({});
     const incomeDetails = await IncomeSchema.find({academicYear: currentAcademicYear[0].year});
+    if(!incomeDetails){
+        req.flash('error', "This student detail doesn't exist in DB anymore");
+        return res.redirect('/dashboard');
+    }
     res.render('Revenue/YearlyIncome', {incomeDetails, year:currentAcademicYear[0].year});
 }));
 
 router.post('/', validateIncome, catchAsync(async(req, res, next) => {
-    const Income = await new IncomeSchema(req.body);
+    const Income = new IncomeSchema(req.body);
     await Income.save();
     res.redirect('/IncomeSchema');
 }));

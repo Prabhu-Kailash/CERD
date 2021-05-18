@@ -7,6 +7,13 @@ const year = require('./Models/AcademicYear');
 const methodOverride = require('method-override');
 const catchAsync = require('./utils/catchAsync');
 const ExpressError = require('./utils/ExpressError');
+const passport = require('passport');
+const session = require('express-session');
+const flash = require('connect-flash');
+const localPassport = require('passport-local');
+const User = require('./Models/User');
+
+
 const studentRoute = require('./Routes/Students');
 const dashboardRoute = require('./Routes/Dashboard');
 const transferRoute = require('./Routes/TransferStudents');
@@ -14,6 +21,7 @@ const incomeRoute = require('./Routes/IncomeSchema');
 const revenueRoute = require('./Routes/Revenue');
 const reportRoute = require('./Routes/ReportCard');
 const staffRoute = require('./Routes/Staff');
+const userRoute = require('./Routes/User');
 
 // Development Phase
 
@@ -51,6 +59,38 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static('Public'));
 
+// Session Config
+
+const sessionConfig = {
+    secret: 'thisisasecret!',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60,
+        maxAge: 1000 * 60 * 60
+    }
+
+}
+app.use(session(sessionConfig));
+
+// Passport Authentication
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localPassport(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// Middleware - Flash Messages
+
+app.use(flash());
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+});
+
 
 // Routes
 
@@ -61,6 +101,8 @@ app.use('/IncomeSchema', incomeRoute);
 app.use('/Revenue', revenueRoute);
 app.use('/Report', reportRoute);
 app.use('/staff', staffRoute);
+app.use('/', userRoute);
+
 
 
 // Academic Year

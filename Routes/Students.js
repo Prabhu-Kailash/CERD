@@ -1,5 +1,6 @@
 const express = require('express');
 const {validateDB} = require('../utils/validateSchemas');
+const {isLoggedIn} = require('../utils/AuthMW');
 const catchAsync = require('../utils/catchAsync');
 const router = express.Router();
 const Student = require('../Models/Students');
@@ -13,11 +14,11 @@ const ReportCard = require('../Models/ReportCard');
 const schoolStandard = {class:['PreKG', 'LKG','UKG','I', 'II', 'III', 'IV', 'V'], sec:['A', 'B', 'C'], RTE:['No', 'Yes']};
 
 
-router.get('/', (req, res) => {
+router.get('/', isLoggedIn, (req, res) => {
     res.render('Students/NewEntry');
 });
 
-router.post('/', validateDB, catchAsync(async (req, res, next) => {
+router.post('/', isLoggedIn, validateDB, catchAsync(async (req, res, next) => {
     const verifyAdmission = await Standard.find({admissionNumber: req.body.class.admissionNumber});
     if (verifyAdmission.length > 0) {
         throw new ExpressError('Admission Number entered already exist in DB (Admission number should be unique)!', 404);
@@ -41,7 +42,7 @@ router.post('/', validateDB, catchAsync(async (req, res, next) => {
     };
 }));
 
-router.put('/:id', validateDB, catchAsync(async(req, res, next) => {
+router.put('/:id', isLoggedIn, validateDB, catchAsync(async(req, res, next) => {
     const {id} = req.params;
     const updateStudent = await Student.findByIdAndUpdate(id, req.body.student, {runValidators: true, new: true}).populate('parents').populate('classes');
     const updateParent = await Parent.findByIdAndUpdate(updateStudent.parents._id, req.body.parents, {runValidators: true, new: true});
@@ -51,14 +52,14 @@ router.put('/:id', validateDB, catchAsync(async(req, res, next) => {
     res.redirect('/dashboard');
 }));
 
-router.delete('/delete/:id', catchAsync(async(req, res, next) => {
+router.delete('/delete/:id', isLoggedIn, catchAsync(async(req, res, next) => {
     const {id} = req.params;
     const removeStudent = await Student.findByIdAndDelete(id);
     req.flash('success', `Successfully deleted/removed ${removeStudent.name} details!`);
     res.redirect('/dashboard');
 }));
 
-router.get('/edit/:id', catchAsync(async (req, res, next) => {
+router.get('/edit/:id', isLoggedIn, catchAsync(async (req, res, next) => {
     const {id} = req.params;
     const retrieveStudent = await Student.findById(id).populate('parents').populate('classes');
     if(!retrieveStudent){
@@ -68,11 +69,11 @@ router.get('/edit/:id', catchAsync(async (req, res, next) => {
     res.render('Students/Edit', {student:retrieveStudent, schoolStandard});
 }));
 
-router.get('/promote', catchAsync(async (req, res, next) => {
+router.get('/promote', isLoggedIn, catchAsync(async (req, res, next) => {
     res.render('Students/Promote');
 }));
 
-router.post('/promote', catchAsync(async (req, res, next) => {
+router.post('/promote', isLoggedIn, catchAsync(async (req, res, next) => {
     const classes = ['PreKG', 'LKG', 'UKG', 'I', 'II', 'III', 'IV', 'V']
     const promotionList = req.body.list;
     let listOfIDs = promotionList.split(",");

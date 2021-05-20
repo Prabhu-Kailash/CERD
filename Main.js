@@ -94,6 +94,7 @@ app.use((req, res, next) => {
 
 // Routes
 
+app.use('/', userRoute);
 app.use('/students', studentRoute);
 app.use('/dashboard', dashboardRoute);
 app.use('/transfer', transferRoute);
@@ -101,8 +102,6 @@ app.use('/IncomeSchema', incomeRoute);
 app.use('/Revenue', revenueRoute);
 app.use('/Report', reportRoute);
 app.use('/staff', staffRoute);
-app.use('/', userRoute);
-
 
 
 // Academic Year

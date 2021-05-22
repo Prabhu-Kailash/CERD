@@ -107,7 +107,7 @@ function staffList(items, wrapper, rows_per_page, page){
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <h4>Do you want to transfer the student?</h4>
+                        <h4>Do you want to terminate/transfer the staff?</h4>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>

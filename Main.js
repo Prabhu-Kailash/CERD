@@ -22,6 +22,7 @@ const revenueRoute = require('./Routes/Revenue');
 const reportRoute = require('./Routes/ReportCard');
 const staffRoute = require('./Routes/Staff');
 const userRoute = require('./Routes/User');
+const {isLoggedIn} = require('./utils/AuthMW');
 
 // Development Phase
 
@@ -86,6 +87,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(flash());
 app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
@@ -106,7 +108,7 @@ app.use('/staff', staffRoute);
 
 // Academic Year
 
-app.post('/changeYear', catchAsync(async (req, res, next) => {
+app.post('/changeYear', isLoggedIn, catchAsync(async (req, res, next) => {
     const retrieve = await year.findOneAndUpdate({}, {$set: {year: req.body.year}});
     res.redirect('/dashboard');
 }));

@@ -4,6 +4,11 @@ const passportLocal = require('passport-local-mongoose');
 
 
 const userSchema = new Schema({
+    responsibility: {
+        type: String,
+        enum: ['Admin', 'Staff'],
+        required: true,
+    },
     email: {
         type: String,
         required: true,

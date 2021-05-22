@@ -4,14 +4,15 @@ const router = express.Router();
 const Student = require('../Models/Students');
 const ReportCard = require('../Models/ReportCard');
 const { Router } = require('express');
+const {isLoggedIn} = require('../utils/AuthMW');
 
-router.get('/:studentID', catchAsync(async (req, res) => {
+router.get('/:studentID', isLoggedIn, catchAsync(async (req, res) => {
     const { studentID } = req.params;
     let student = await Student.findById(studentID).populate('mark');
     res.render('Students/Report', {student:student, report:student.mark == undefined ? studentMark : student.mark});
 }));
 
-router.post('/:studentID', catchAsync(async (req, res) => {
+router.post('/:studentID', isLoggedIn, catchAsync(async (req, res) => {
     const { studentID } = req.params;
     const retrieveStudent = await Student.findById(studentID).populate('mark');
     if (retrieveStudent.mark.heading != req.body.heading){
@@ -23,14 +24,14 @@ router.post('/:studentID', catchAsync(async (req, res) => {
     res.render('Students/Report' , {student:retrieveStudent, report:retireveMark});
 }));
 
-router.delete('/:studentID/:reportID', catchAsync(async (req, res) => {
+router.delete('/:studentID/:reportID', isLoggedIn, catchAsync(async (req, res) => {
     const { studentID, reportID } = req.params;
     const retrieveStudent = await Student.findById(studentID).populate('mark');
     const deleteReport = await ReportCard.findByIdAndUpdate(retrieveStudent.mark._id, {$pull:{subjects: {_id:reportID}}}, {new:true});
     res.render('Students/Report' , {student:retrieveStudent, report:deleteReport});
 }))
 
-router.delete('/:studentID', catchAsync(async (req, res) => {
+router.delete('/:studentID', isLoggedIn, catchAsync(async (req, res) => {
     const { studentID } = req.params;
     const retrieveStudent = await Student.findById(studentID).populate('mark');
     const deleteReport = await ReportCard.findByIdAndUpdate(retrieveStudent.mark._id, {heading: undefined, $set: {subjects: []}}, {new:true});

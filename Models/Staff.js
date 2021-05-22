@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = require('./User');
 const { Schema } = mongoose;
 
 const staffSchema = new Schema({
@@ -23,6 +24,10 @@ const staffSchema = new Schema({
     detail: {
         type: String,
         enum: ['Tech', 'NonTech']
+    },
+    role: {
+        type: String,
+        enum: ['Admin', 'Staff']
     },
     fatherName: String,
     motherName: String,
@@ -56,5 +61,12 @@ staffSchema.post('save', async function(staff) {
         await mongoose.model('Staff').findOneAndUpdate({_id: staff._id}, {current: 'Active'});
     }
 });
+
+staffSchema.post('findOneAndDelete', async function(staff) {
+    if(staff) {
+        await User.findOneAndDelete({username: staff.admissionNumber});
+    }
+});
+
 
 module.exports = mongoose.model('Staff', staffSchema);

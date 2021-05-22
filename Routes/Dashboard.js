@@ -4,9 +4,10 @@ const router = express.Router();
 const Student = require('../Models/Students');
 const Staff = require('../Models/Staff');
 const year = require('../Models/AcademicYear');
+const {isLoggedIn} = require('../utils/AuthMW');
 
 
-router.get('/', catchAsync(async (req, res, next) => {
+router.get('/', isLoggedIn, catchAsync(async (req, res, next) => {
     const listOfStudents = await Student.find({}).populate('parents').populate('classes').populate('revenue');
     const activeStaff = await Staff.find({current:'Active'});
     const techStaff = activeStaff.filter(function(ele) {
@@ -48,12 +49,12 @@ router.get('/', catchAsync(async (req, res, next) => {
     res.render('Students/studentsList', {students:listOfStudents, numberData});
 }));
 
-router.get('/json', catchAsync(async (req, res, next) => {
+router.get('/json', isLoggedIn, catchAsync(async (req, res, next) => {
     const listOfStudents = await Student.find({current: 'Active'}).populate('parents').populate('classes').sort({ name: 'asc'});
     res.status(200).json({data: listOfStudents});
 }));
 
-router.get('/Tjson', catchAsync(async (req, res, next) => {
+router.get('/Tjson', isLoggedIn, catchAsync(async (req, res, next) => {
     const listOfStudents = await Student.find({current: 'InActive'}).populate('parents').populate('classes').sort({ name: 'asc'});
     res.status(200).json({data: listOfStudents});
 }));

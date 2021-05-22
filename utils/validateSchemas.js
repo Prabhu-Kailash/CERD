@@ -37,6 +37,7 @@ ValidateStaffSchema = joi.object({
     caste: joi.string(),
     gender: joi.string().valid('Male', 'Female').required(),
     detail: joi.string().valid('Tech', 'NonTech').required(),
+    role: joi.string().valid('Staff', 'Admin').required(),
     fatherName: joi.string().required(),
     motherName: joi.string().required(),
     doorNumber: joi.string(),

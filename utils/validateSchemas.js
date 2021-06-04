@@ -46,7 +46,7 @@ ValidateStaffSchema = joi.object({
     pincode: joi.number(),
     mainContact: joi.number().integer().max(9999999999).required(),
     alternateContact: joi.number().integer().max(9999999999),
-    admissionNumber: joi.number().unsafe().required(),
+    admissionNumber: joi.number().unsafe().min(999).required(),
     DOJ: joi.date().iso().required()
 });
 

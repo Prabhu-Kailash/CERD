@@ -117,12 +117,20 @@
                 <div class="row mb-3">
                     <div class="col">
                         <label class="form-label" for="admissionNumber">Admission Number:</label>
-                        <input type="number" name="staff[admissionNumber]" id="admissionNumber" class="form-control" value="<%= staff.admissionNumber %>" required>
+                        <input type="number" name="staff[admissionNumber]" id="admissionNumber" class="form-control" value="<%= staff.admissionNumber %>" disabled required>
                     </div>
                     <div class="col">
                         <label class="form-label" for="DOJ">Date of Joining:</label>
                         <input class="form-control" type="date" id="DOJ" name="staff[DOJ]" data-provide="datepicker" value="<%= staff.DOJ %>" required>
                     </div>
+                </div>
+
+                <div class="col">
+                    <label class="form-label" for="class">Roles & responsibility:</label>
+                    <select class="form-select" name="staff[role]" aria-label="class" <%= currentUser.responsibility == "Staff" ? "disabled" : "" %> >
+                        <option value="Staff" selected>Staff (Provides access to create & edit student profiles)</option>
+                        <option value="Admin">Admin (Provides all permissions delete, create, edit student & staff profiles)</option>
+                      </select>
                 </div>
 
                 <div class="row justify-content-center my-3 text-center">

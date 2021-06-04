@@ -13,7 +13,9 @@ const userSchema = new Schema({
         type: String,
         required: true,
         unique: true
-    }
+    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
 });
 
 userSchema.plugin(passportLocal);
